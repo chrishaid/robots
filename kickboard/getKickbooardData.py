@@ -41,7 +41,7 @@ br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.
 
 print('Opening Kickboard\'s authentication page')
 # Open Kickboard's authenticate webpage
-r=br.open('https://kippcreate.kickboardforteachers.com')
+r=br.open('https://kippchicago.kickboardforteachers.com')
 
 # Select form
 br.select_form(nr=0)
@@ -56,21 +56,39 @@ print('Authenticated!')
 #navigate to csv page and save file
 print('Navigating to and retrieving culture analysis export . . . ')
 r=br.open('https://kippcreate.kickboardforteachers.com/culture-analysis/index')
-f=br.retrieve('https://kippcreate.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
 
+# Get KCCP Data
+r=br.open('https://kippchicago.kickboardforteachers.com/user/set-school/id/1') # Select KCCP (id = 1)
+f=br.retrieve('https://kippcreate.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
+print('Got KCCP!')
 #Now to save the file
 #get current working directory
 dest_dir=os.getcwd()
 
 #use to make file name
-dest_file=dest_dir+'/culture-analysis_'+datetime.now().strftime('%y%m%d')+'.csv'
+dest_file=dest_dir+'/KCCP_culture-analysis_'+datetime.now().strftime('%y%m%d')+'.csv'
 
 # Move and rename file in one line
-print('renaming and saving!')
+print('renaming and saving KCCP Data!')
 os.rename(f,dest_file)
 
+# Get Bloom data
+r=br.open('https://kippchicago.kickboardforteachers.com/user/set-school/id/3') # Select KBPP (id = 3)
+f=br.retrieve('https://kippcreate.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
+print('Got KBCP!')
+#Now to save the file
+#get current working directory
+dest_dir=os.getcwd()
 
-#Now run R process to create Kate's preferred output
+#use to make file name
+dest_file=dest_dir+'/KBCP_culture-analysis_'+datetime.now().strftime('%y%m%d')+'.csv'
+
+# Move and rename file in one line
+print('renaming and saving KBCP Data!')
+os.rename(f,dest_file)
+
+#Now run R process to create Kate's preferred output for both KCCP and KBCP (I loop over schools within
+# the R script
 cmd = ['Rscript', dest_dir+'/Kickboard_long_to_2_row_wide_working.R', datetime.now().strftime('%y%m%d')]
 
 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -81,10 +99,22 @@ proc.wait()
 print proc.returncode
 
 #Finally need to email KB file to recipient
-kb_file=dest_dir+'/KB_'+datetime.now().strftime('%y%m%d')+'.csv'
+
+#first to Create
+kb_file=dest_dir+'/KCCP_KB_'+datetime.now().strftime('%y%m%d')+'.csv'
 
 print('Mailing ' +kb_file + ' . . . ')
 mail_cmd = 'echo "Here\'s this week\'s KB data!" | mutt -a ' + kb_file + ' -s "Kickboard Data" -c chaid@kippchicago.org -- kmazurek@kippchicago.org'
 
 subprocess.call(mail_cmd, shell=True)
+
+#then to Bloom
+kb_file=dest_dir+'/KBCP_KB_'+datetime.now().strftime('%y%m%d')+'.csv'
+
+print('Mailing ' +kb_file + ' . . . ')
+mail_cmd = 'echo "Here\'s this week\'s KB data!" | mutt -a ' + kb_file + ' -s "Kickboard Data" -c chaid@kippchicago.org -- vpathiparampil@kippchicago.org'
+
+subprocess.call(mail_cmd, shell=True)
+
+
 print('Athentication, download, transformation, and mailing complete!')
