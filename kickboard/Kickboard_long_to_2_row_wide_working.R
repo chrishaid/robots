@@ -40,7 +40,7 @@ if(length(args)==2){
 
 #Get Kickboard culture data for Create and Bloom
 
-for(i %in% c("KCCP, KBCP")){
+for(i in c("KCCP", "KBCP")){
   print(sprintf("Loading %s Kickboard data . . . ", i))
   in.file<-paste(i, "_culture-analysis_",format(todays.date,"%y%m%d"),".csv", sep="")
   kb.long<-read.csv(in.file)
