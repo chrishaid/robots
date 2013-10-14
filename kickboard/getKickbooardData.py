@@ -58,8 +58,8 @@ print('Navigating to and retrieving culture analysis export . . . ')
 
 # Get KCCP Data
 r=br.open('https://kippchicago.kickboardforteachers.com/user/set-school/id/1') # Select KCCP (id = 1)
-r=br.open('https://kippcreate.kickboardforteachers.com/culture-analysis/index')
-f=br.retrieve('https://kippcreate.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
+r=br.open('https://kippchicago.kickboardforteachers.com/culture-analysis/index')
+f=br.retrieve('https://kippchicago.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
 print('Got KCCP!')
 #Now to save the file
 #get current working directory
@@ -74,8 +74,8 @@ os.rename(f,dest_file)
 
 # Get Bloom data
 r=br.open('https://kippchicago.kickboardforteachers.com/user/set-school/id/3') # Select KBPP (id = 3)
-r=br.open('https://kippcreate.kickboardforteachers.com/culture-analysis/index')
-f=br.retrieve('https://kippcreate.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
+r=br.open('https://kippchicago.kickboardforteachers.com/culture-analysis/index')
+f=br.retrieve('https://kippchicago.kickboardforteachers.com/culture-analysis/export/')[0] #f is path to downloaded file
 print('Got KBCP!')
 #Now to save the file
 #get current working directory
