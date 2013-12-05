@@ -103,7 +103,7 @@ nwea_rel_dir = os.path.relpath(dest_dir,os.getcwd())
 
 
 for fn in os.listdir(nwea_rel_dir):
-    subprocess.call(["map_cdf_prep_2.sh", nwea_rel_dir + "/" +fn ])
+    subprocess.call(["./map_cdf_prep_2.sh", nwea_rel_dir + "/" +fn ])
 
 
 
@@ -118,7 +118,7 @@ t_programs = "tblProgramAssignments" + sy
 
 # 2. Establish odbc connection with MySQL
 print("Connecting to MySQL Testing Database . . . ")
-mapcon = pyodbc.connect('DSN=kippchidata;')
+mapcon = pyodbc.connect('DSN=kippchidata; local_infile=1;')
 
 cursor = mapcon.cursor()
 
@@ -239,14 +239,21 @@ q_create_programs = """
 # INFILE Data
 
 print("Loading data into database  . . .")
-def load_data(infile, outtable) :
-    q_load="""
-    LOAD DATA LOCAL INFILE '""" + infile + """'
-	INTO TABLE """ + outtable + """
-	FIELDS TERMINATED BY ','
-	;"""
-    cursor.execute(q_load)
-    mapcon.commit()
+#def load_data(infile, outtable) :
+#    q_load="""
+#    LOAD DATA LOCAL INFILE '""" + infile + """'
+#	IGNORE INTO TABLE """ + outtable + """
+#	FIELDS TERMINATED BY ','
+#	;"""
+#    cursor.execute(q_load)
+#    mapcon.commit()
+
+def load_data(infile, outtable):
+    load_text="""
+        mysql -h ec2-54-245-118-235.us-west-2.compute.amazonaws.com -u chaid --password=haiKIPP1 -D db_kippchidata --ssl-key=/home/ubuntu/.ssh/kippchidatakey.pem -e\"LOAD DATA LOCAL INFILE '"""+infile+"""' INTO TABLE """+outtable+""" FIELDS TERMINATED BY ',';\";
+        """
+    subprocess.call(load_text, shell=True)
+
 
 
 # 4. Execute queries
