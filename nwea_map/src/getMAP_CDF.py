@@ -68,13 +68,20 @@ f=br.retrieve(cdf_url)#f is path to downloaded file
 # Figure out year and season
 def getSeasonYear():
     m =  datetime.now().month
-    y = datetime.now().strftime('%y')
+    y = datetime.now().year
+    y_string = datetime.now().strftime('%y')
+    f_range = range(8,11)
+    w_range = range(1,3) + [12]
     if m in range(8,11):
-        return "Fall" + y
-    elif m in [range(1,3),12]:
-        return "Winter" + y
+        return "Fall" + y_string
+    elif m==12:	
+	y=y+1
+	y_string = str(y)[2] + str(y)[3]
+	return "Winter" + y_string 
+    elif m in range(1,3):
+        return "Winter" + y_string
     else:
-        return "Spring" + y
+        return "Spring" + y_string
 
 sy = getSeasonYear()
 
