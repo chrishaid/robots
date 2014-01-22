@@ -12,7 +12,8 @@ import zipfile
 import pyodbc
 from datetime import datetime
 import subprocess
-
+import sys
+import getopt
 
 # Browser
 print("Instantiating mechanize browser . . .")
@@ -83,7 +84,31 @@ def getSeasonYear():
     else:
         return "Spring" + y_string
 
-sy = getSeasonYear()
+def getOptions(argv):
+    if len(sys.argv)<2:
+	return # Return if no arguments passed
+    inputdir = ''
+    sy = ''
+    try:
+	opts, args = getopt.getopt(argv, "s:i:")
+    except:
+	print 'getMAP_CDF.py -s <season-year>'
+	sys.exit(2)
+    for opt, arg in opts:
+	if opt in ('-s', '--season'):
+		sy = arg
+	elif opt in ('-i', '--inputdir'):
+		inputdir = arg
+    print 'Season-year is: ',  sy
+    print 'Input directory is: ', inputdir 
+    return [sy,inputdir]
+
+opts =  getOptions(sys.argv[1:])	
+if len(sys.argv)>1:
+    sy = opts[0]
+    print "sy =", sy, " which has length ", len(sy)
+elif len(sys.argv)==1:
+    sy = getSeasonYear()
 
 
 #Now to save the file
