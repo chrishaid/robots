@@ -42,7 +42,7 @@ br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
 # Open NWEAs's authenticate webpage
-print("Navigating to NWEA Login PAge . . .")
+print("Navigating to NWEA Login Page . . .")
 r=br.open('https://kippchicago-admin.mapnwea.org/')
 
 # Select form
@@ -144,7 +144,7 @@ t_assessments = "tblAssessmentResults" + sy
 t_students = "tblStudentBySchool" + sy
 t_classes = " tblClassAssignments" + sy
 t_programs = "tblProgramAssignments" + sy
-t_accomodations = "AccommodationAssignment" + sy
+t_accomodations = "tblAccommodationAssignment" + sy
 
 
 
@@ -272,8 +272,8 @@ q_create_programs = """
 q_create_accomodations = """
     CREATE TABLE """ + t_accomodations + """ (
         TermName VARCHAR(30),
-        TestId INT,
-        StudentId INT,
+        TestID INT,
+        StudentID INT,
         AccommodationCategory VARCHAR(50),
         Accommodation VARCHAR(50)
         );"""
