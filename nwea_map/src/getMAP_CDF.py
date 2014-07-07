@@ -43,7 +43,7 @@ br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.
 
 # Open NWEAs's authenticate webpage
 print("Navigating to NWEA Login PAge . . .")
-r=br.open('https://pdx-map01.mapnwea.org/admin')
+r=br.open('https://kippchicago-admin.mapnwea.org/')
 
 # Select form
 # br.select_form(nr=0])
@@ -56,12 +56,12 @@ print("Authenticating . . .")
 br.submit()
 
 #navigate to csv page and save file
-r=br.open('https://pdx-map01.mapnwea.org/report/home/map')
+r=br.open('https://kippchicago-admin.mapnwea.org/report/home/map')
 
 #find download url
 cdf_link = br.find_link(text_regex='Download')
 
-cdf_url='https://pdx-map01.mapnwea.org'+cdf_link.url
+cdf_url='https://kippchicago-admin.mapnwea.org'+cdf_link.url
 
 print("Retriving CDF . . . ")
 f=br.retrieve(cdf_url)#f is path to downloaded file
@@ -144,7 +144,7 @@ t_assessments = "tblAssessmentResults" + sy
 t_students = "tblStudentBySchool" + sy
 t_classes = " tblClassAssignments" + sy
 t_programs = "tblProgramAssignments" + sy
-
+t_accomodations = "AccommodationAssignment" + sy
 
 
 
@@ -162,6 +162,7 @@ q_drop_assessments = "DROP TABLE IF EXISTS " + t_assessments + ";"
 q_drop_students = "DROP TABLE IF EXISTS " + t_students + ";"
 q_drop_classes = "DROP TABLE IF EXISTS " + t_classes + ";"
 q_drop_programs = "DROP TABLE IF EXISTS " + t_programs + ";"
+q_drop_accomodations = "DROP TABLE IF EXISTS " + t_accomodations + ";"
 
 #Create CREATE TABLE query Strings
 # tblAssessments
@@ -267,6 +268,15 @@ q_create_programs = """
 	Program VARCHAR(50)
 	);"""
 
+# accomodations
+q_create_accomodations = """
+    CREATE TABLE """ + t_accomodations + """ (
+        TermName VARCHAR(30),
+        TestId INT,
+        StudentId INT,
+        AccommodationCategory VARCHAR(50),
+        Accommodation VARCHAR(50)
+        );"""
 
 # INFILE Data
 
@@ -317,6 +327,12 @@ cursor.execute(q_create_programs)
 mapcon.commit()
 load_data(nwea_rel_dir + "/ProgramAssignments_loaddata.csv", t_programs)
 
+print("Uploading Accomodation Assignments to Database . . .")
+cursor.execute(q_drop_accomodations)
+mapcon.commit()
+cursor.execute(q_create_accomodations)
+mapcon.commit()
+load_data(nwea_rel_dir + "/AccommodationAssignment_loaddata.csv", t_accomodations)
 
 
 print("Done!")
