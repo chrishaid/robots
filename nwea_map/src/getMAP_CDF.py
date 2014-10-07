@@ -42,7 +42,7 @@ br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
 # Open NWEAs's authenticate webpage
-print("Navigating to NWEA Login PAge . . .")
+print("Navigating to NWEA Login Page . . .")
 r=br.open('https://kippchicago-admin.mapnwea.org/')
 
 # Select form
@@ -144,7 +144,7 @@ t_assessments = "tblAssessmentResults" + sy
 t_students = "tblStudentBySchool" + sy
 t_classes = " tblClassAssignments" + sy
 t_programs = "tblProgramAssignments" + sy
-
+t_accomodations = "tblAccommodationAssignment" + sy
 
 
 
@@ -162,6 +162,7 @@ q_drop_assessments = "DROP TABLE IF EXISTS " + t_assessments + ";"
 q_drop_students = "DROP TABLE IF EXISTS " + t_students + ";"
 q_drop_classes = "DROP TABLE IF EXISTS " + t_classes + ";"
 q_drop_programs = "DROP TABLE IF EXISTS " + t_programs + ";"
+q_drop_accomodations = "DROP TABLE IF EXISTS " + t_accomodations + ";"
 
 #Create CREATE TABLE query Strings
 # tblAssessments
@@ -267,6 +268,15 @@ q_create_programs = """
 	Program VARCHAR(50)
 	);"""
 
+# accomodations
+q_create_accomodations = """
+    CREATE TABLE """ + t_accomodations + """ (
+        TermName VARCHAR(30),
+        TestID INT,
+        StudentID INT,
+        AccommodationCategory VARCHAR(50),
+        Accommodation VARCHAR(50)
+        );"""
 
 # INFILE Data
 
@@ -317,6 +327,12 @@ cursor.execute(q_create_programs)
 mapcon.commit()
 load_data(nwea_rel_dir + "/ProgramAssignments_loaddata.csv", t_programs)
 
+print("Uploading Accomodation Assignments to Database . . .")
+cursor.execute(q_drop_accomodations)
+mapcon.commit()
+cursor.execute(q_create_accomodations)
+mapcon.commit()
+load_data(nwea_rel_dir + "/AccommodationAssignment_loaddata.csv", t_accomodations)
 
 
 print("Done!")
