@@ -1,2 +1,3 @@
 #Ignore NWEA Data pulls in order to make deploying changes lest wonky 
 nwea_map/data/
+nwea_map/src/data/
