@@ -27,8 +27,8 @@ if(length(args)==0) {
 }
 
 if(length(args)==1){
-  start.date<-floor_date(ymd(args[1]), unit="week") - weeks(1) + days(1)
-  end.date<-floor_date(start.date+weeks(1), unit="week") 
+  start.date<-floor_date(ymd(args[1]), unit="week") - days(1)
+  end.date<-start.date+days(6) 
   print(start.date)
   print(end.date)
 }

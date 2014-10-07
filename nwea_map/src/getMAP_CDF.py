@@ -43,7 +43,7 @@ br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.
 
 # Open NWEAs's authenticate webpage
 print("Navigating to NWEA Login PAge . . .")
-r=br.open('https://pdx-map01.mapnwea.org/admin')
+r=br.open('https://kippchicago-admin.mapnwea.org/')
 
 # Select form
 # br.select_form(nr=0])
@@ -56,12 +56,12 @@ print("Authenticating . . .")
 br.submit()
 
 #navigate to csv page and save file
-r=br.open('https://pdx-map01.mapnwea.org/report/home/map')
+r=br.open('https://kippchicago-admin.mapnwea.org/report/home/map')
 
 #find download url
 cdf_link = br.find_link(text_regex='Download')
 
-cdf_url='https://pdx-map01.mapnwea.org'+cdf_link.url
+cdf_url='https://kippchicago-admin.mapnwea.org'+cdf_link.url
 
 print("Retriving CDF . . . ")
 f=br.retrieve(cdf_url)#f is path to downloaded file
